@@ -1,0 +1,9 @@
+// app/api/query/route.ts
+import { NextRequest, NextResponse } from 'next/server';
+import { execute } from '../../../lib/openai';
+
+export async function POST(req: NextRequest) {
+  const { query } = await req.json();
+  const result = await execute(query);
+  return NextResponse.json(result);
+}
