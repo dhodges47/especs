@@ -1,4 +1,4 @@
-// app/utils/ingestPdf.ts
+// ingestPdf.ts
 import fs from 'fs';
 import pdfParse from 'pdf-parse';
 import { Client } from 'pg';

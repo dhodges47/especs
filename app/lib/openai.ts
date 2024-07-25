@@ -1,16 +1,25 @@
-// app/lib/openai.ts
-import { Configuration, OpenAIApi } from 'openai';
-import { functions } from '../utils/openaiFunctions';
+// openai.ts
+
+import OpenAI from 'openai';
+const { Configuration, OpenAIApi } = require("openai");
+import { functions, tools } from '../utils/openaiFunctions';
 import ingestPdf from '../utils/ingestPdf';
-import { queryDocuments } from '../utils/query';
+import { queryDocuments } from '../api/query/route';
+
 
 const configuration = new Configuration({
-  apiKey: process.env.OPENAI_API_KEY,
+  apiKey: process.env.OPENAI_API_KEY, // Ensure your API key is set in the environment variables
 });
-
 const openai = new OpenAIApi(configuration);
 
-const callFunction = async (name: string, args: any) => {
+// Define the expected return type for the callFunction
+interface FunctionResult {
+  [key: string]: any; 
+}
+
+
+
+const callFunction = async (name: string, args: any) : Promise<FunctionResult> =>{
   switch (name) {
     case 'ingestPdf':
       return await ingestPdf(args.filePath);
@@ -25,9 +34,10 @@ const execute = async (query: string) => {
   const response = await openai.createChatCompletion({
     model: 'gpt-4',
     messages: [{ role: 'user', content: query }],
-    functions: Object.values(functions),
+    tools: tools,
+    tool_choice: "auto",
   });
-
+ 
   const { message } = response.data.choices[0];
   if (message.function_call) {
     const { name, arguments: args } = message.function_call;

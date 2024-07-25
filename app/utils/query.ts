@@ -1,9 +1,13 @@
-// app/utils/query.ts
-import pinecone from '../lib/pinecone';
-import openai from '../lib/openai';
+// query.ts
+import { Pinecone, RecordValues } from '@pinecone-database/pinecone';
 import { Client } from 'pg';
 
-const queryDocuments = async (query: string) => {
+
+const pinecone = new Pinecone({
+  apiKey: process.env.PINECONE_API_KEY || '', 
+ 
+})
+const queryDocuments = async (query: RecordValues) => {
   const index = pinecone.Index('your_index_name');
   const pineconeResults = await index.query({
     topK: 5,

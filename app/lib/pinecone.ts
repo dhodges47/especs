@@ -1,10 +1,11 @@
 // app/lib/pinecone.ts
-import { PineconeClient } from 'pinecone-client';
-
-const pinecone = new PineconeClient();
-pinecone.init({
-  environment: 'your_environment',
-  apiKey: 'your_api_key',
+import { Pinecone } from '@pinecone-database/pinecone';
+const PINECONE_API_ID: string = process.env.PINECONE_API_ID || ''
+const pinecone = new Pinecone({
+  apiKey: PINECONE_API_ID
 });
 
+
 export default pinecone;
+
+
